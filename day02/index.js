@@ -1,6 +1,6 @@
 let input = require("./input.cjs");
 
-let inputArray = input.split("\n");
+const inputArray = input.split("\n");
 
 // console.log(inputArray)
 const games = inputArray.map((string) => {
