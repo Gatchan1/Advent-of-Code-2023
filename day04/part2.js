@@ -29,27 +29,35 @@ const cards = inputArray.map((card) => {
 
 // console.log("cards:", cards[2], cards[3]);
 
-const cardWins = cards.map((card) => {
-  const wins = card.winNums.filter((number) => {
+const matchesPerCards = cards.map((card) => {
+  const matchingNumbers = card.winNums.filter((number) => {
     return card.ownNums.includes(number);
   });
-  return { id: card.id, wins };
+  return { id: card.id, matches: matchingNumbers.length };
 });
 
-// console.log("cardWins: ", cardWins[2], cardWins[3]);
+// console.log("matchesPerCards: ", matchesPerCards[2], matchesPerCards[3]);
 
-const pointsPerCards = cardWins.map((card) => {
-  let points;
-  if (card.wins.length === 1) points = 1;
-  else if (card.wins.length === 0) points = 0;
-  else points = Math.pow(2, card.wins.length - 1);
-  return { id: card.id, points };
-});
+const countCardCopies = matchesPerCards.map((card) => {
+  card.copies = 1;
+  return card
+})
+// console.log(countCardCopies);
 
-// console.log("pointsPerCards: ", pointsPerCards);
+for (let i = 0; i < countCardCopies.length; i++) {
+  let lengthToCopy = countCardCopies[i].matches;
+  let addCopyIndex = i + 1;
+  while (lengthToCopy > 0) {
+    countCardCopies[addCopyIndex].copies = countCardCopies[addCopyIndex].copies + countCardCopies[i].copies;
+    addCopyIndex++;
+    lengthToCopy--;
+  }
+}
 
-const result = pointsPerCards.reduce((acc, curr) => {
-    return (acc + curr.points)
+console.log("after calculating the number of copies per card: ",countCardCopies);
+
+const result = countCardCopies.reduce((acc, curr) => {
+  return acc + curr.copies
 }, 0)
 
-console.log("the result is: ", result)
+console.log("the result of part 2 is: ", result)
