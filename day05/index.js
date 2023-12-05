@@ -10,7 +10,7 @@ function extractSeeds(data) {
   return seedsStringArray.map((seed) => Number(seed));
 }
 const seeds = extractSeeds(input);
-console.log(seeds);
+console.log("seeds: ", seeds);
 
 function extractMap(data, index1, index2) {
   const mapString = data.slice(index1, index2);
@@ -83,14 +83,54 @@ function transform(seed, map) {
   else return seed;
 }
 
-const transformedSeeds = seeds.map((seed)=>{
-    const soil = transform(seed, seedToSoil);
-    const fertilizer = transform(soil, soilToFertilizer);
-    const water = transform(fertilizer, fertilizerToWater);
-    const light = transform(water, waterToLight);
-    const temperature = transform(light, lightToTemperature);
-    const humidity = transform(temperature, temperatureToHumidity);
-    const location = transform(humidity, humidityToLocation);
-    return location;
-})
-console.log("locations:",transformedSeeds);
+function seedToLocation(seed) {
+  const soil = transform(seed, seedToSoil);
+  const fertilizer = transform(soil, soilToFertilizer);
+  const water = transform(fertilizer, fertilizerToWater);
+  const light = transform(water, waterToLight);
+  const temperature = transform(light, lightToTemperature);
+  const humidity = transform(temperature, temperatureToHumidity);
+  const location = transform(humidity, humidityToLocation);
+  return location;
+}
+
+const transformedSeeds = seeds.map((seed)=> seedToLocation(seed))
+// console.log("locations:",transformedSeeds); // Here lies the answer of part 1 !!
+
+// ---------- END OF PART 1 ----------
+
+
+// :::::::::::: PART 2 ::::::::::::
+
+function getRealSeeds(data) {
+  const seedRanges = []
+  for (let i = 0; i < data.length; i += 2) {
+    seedRanges.push([data[i], data[i+1]])
+  }
+  console.log("seedRanges: ", seedRanges)
+
+  let lowerLocation;
+  // seedRanges.forEach((range) => {
+
+  //First I tried to get them all at once but it was taking too long,
+  // so in the end I looked only into one range at a time: 
+    for (let i = 0; i < seedRanges[9][1]; i++) {
+      let seed = seedRanges[9][0] + i;
+      let location = seedToLocation(seed);
+      if (!lowerLocation || lowerLocation > location) lowerLocation = location;
+    }
+  // })
+  console.log("9: ", lowerLocation)
+}
+getRealSeeds(seeds)
+
+// seedRanges[0]: 3117212723
+// seedRanges[1]: 210388587
+// seedRanges[2]: 120063313
+// seedRanges[3]: 317412500
+// seedRanges[4]: 3247724559
+// seedRanges[5]: 455176214
+// seedRanges[6]: 291248264
+// seedRanges[7]: 384367354
+// seedRanges[8]: 69841803 // this was the answer for part 2!
+// seedRanges[9]: 1148949110
