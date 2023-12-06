@@ -1,31 +1,33 @@
-const stringInput = require("./input.cjs");
+const input = require("./input.cjs");
 
-const arrayInput = stringInput.split("\n");
-// console.log(arrayInput)
-
-const numStringArray = arrayInput.map((string) => {
-  let num1;
-  let num2;
-  for (let i = 0; i < string.length; i++) {
-    if (string.charAt(i) >= 0 || string.charAt(i) <= 9) {
-      num1 = string.charAt(i);
-      break;
+function parse(data) {
+  const splitData = data.split("\n");
+  const numStringData = splitData.map((string) => {
+    let num1;
+    let num2;
+    for (let i = 0; i < string.length; i++) {
+      if (string.charAt(i) >= 0 || string.charAt(i) <= 9) {
+        num1 = string.charAt(i);
+        break;
+      }
     }
-  }
-  for (let i = string.length - 1; i >= 0; i--) {
-    if (string.charAt(i) >= 0 || string.charAt(i) <= 9) {
-      num2 = string.charAt(i);
-      break;
+    for (let i = string.length - 1; i >= 0; i--) {
+      if (string.charAt(i) >= 0 || string.charAt(i) <= 9) {
+        num2 = string.charAt(i);
+        break;
+      }
     }
-  }
-  return num1 + num2;
-});
-// console.log(numStringArray);
+    return num1 + num2;
+  });
+  // console.log(numStringData);
+  return numStringData.map((numString) => Number(numString));
+}
 
-const numArray = numStringArray.map((numString) => Number(numString));
-// console.log(numArray);
+const parsedInput = parse(input);
+// console.log(parsedInput);
 
-const answer = numArray.reduce((acc, curr)=>{
+const answer = parsedInput.reduce((acc, curr)=>{
     return acc + curr;
 });
+
 console.log("the answer is: ", answer)
