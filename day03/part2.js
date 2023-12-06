@@ -67,49 +67,52 @@ for (let i = 0; i < input.length; i++) {
 
 // console.log(validValues); // [ '65', [ 'i1-j12' ] ],
 
-const reorderedValues = validValues.map((value)=>{
-  return [value[1][0], value[0]]
-})
-// Simple reformatting. I don't need an inner array with only one item.
-// console.log(reorderedValues) // [ 'i1-j12', '65' ],
-
-const groupedValues = reorderedValues.map((value) => {
-  return reorderedValues.filter((elem) => {
-    return (elem[0] == value[0])
+function getGears(values) {
+  const reorderedValues = values.map((value)=>{
+    return [value[1][0], value[0]]
   })
-})
-// I group the values that share the same asterisk.
-// console.log("groupedValues: ",groupedValues) // [ [ 'i1-j33', '998' ], [ 'i1-j33', '874' ] ],
+  // Simple reformatting. I don't need an inner array with only one item.
+  // console.log(reorderedValues) // [ 'i1-j12', '65' ],
+  
+  const groupedValues = reorderedValues.map((value) => {
+    return reorderedValues.filter((elem) => {
+      return (elem[0] == value[0])
+    })
+  })
+  // I group the values that share the same asterisk.
+  // console.log("groupedValues: ",groupedValues) // [ [ 'i1-j33', '998' ], [ 'i1-j33', '874' ] ],
+  
+  const stringifiedGroups = groupedValues.map((value) => {
+    return `${value}`;
+  })
+  // I stringify each group so that I can later easily compare them and filter the duplicates.
+  // console.log(stringifiedGroups) // 'i1-j33,998,i1-j33,874',
+  
+  const stringifiedNoRepeats = [];
+  stringifiedGroups.forEach((elem)=>{
+    if (!stringifiedNoRepeats.includes(elem)) stringifiedNoRepeats.push(elem);
+  })
+  // Filter duplicates.
+  // console.log(stringifiedNoRepeats) // 'i1-j33,998,i1-j33,874',
+  
+  const parsedGroups = stringifiedNoRepeats.map((value) => {
+    let newValue = value.split(",")
+    return newValue;
+  })
+  // "Un-stringify" our array elements.
+  // console.log(parsedGroups) // [ 'i1-j12', '65' ],
+  // [ 'i1-j33', '998', 'i1-j33', '874' ],
+  
+  const gears = parsedGroups.filter((value) => {
+    return (value.length === 4)
+  })
+  // Filter out the asterisks that only connect to one number.
+  // We only save the asterisks that connect with exactly two numbers.
+  // console.log("gears",gears) // [ 'i1-j33', '998', 'i1-j33', '874' ],
+  return gears
+}
 
-const stringifiedGroups = groupedValues.map((value) => {
-  return `${value}`;
-})
-// I stringify each group so that I can later easily compare them and filter the duplicates.
-// console.log(stringifiedGroups) // 'i1-j33,998,i1-j33,874',
-
-const stringifiedNoRepeats = [];
-stringifiedGroups.forEach((elem)=>{
-  if (!stringifiedNoRepeats.includes(elem)) stringifiedNoRepeats.push(elem);
-})
-// Filter duplicates.
-// console.log(stringifiedNoRepeats) // 'i1-j33,998,i1-j33,874',
-
-const parsedGroups = stringifiedNoRepeats.map((value) => {
-  let newValue = value.split(",")
-  return newValue;
-})
-// "Un-stringify" our array elements.
-// console.log(parsedGroups) // [ 'i1-j12', '65' ],
-// [ 'i1-j33', '998', 'i1-j33', '874' ],
-
-const gears = parsedGroups.filter((value) => {
-  return (value.length === 4)
-})
-// Filter out the asterisks that only connect to one number.
-// We only save the asterisks that connect with exactly two numbers.
-// console.log("gears",gears) // [ 'i1-j33', '998', 'i1-j33', '874' ],
-
-const result = gears.reduce((acc, curr) => {
+const result = getGears(validValues).reduce((acc, curr) => {
   return acc + (curr[1] * curr[3]);
 }, 0)
 // Multiply the second value by the fourth value of each array element, and then sum those multiplications.
