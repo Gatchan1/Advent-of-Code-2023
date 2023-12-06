@@ -114,13 +114,13 @@ function getRealSeeds(data) {
 
   //First I tried to get them all at once but it was taking too long,
   // so in the end I looked only into one range at a time: 
-    for (let i = 0; i < seedRanges[9][1]; i++) {
-      let seed = seedRanges[9][0] + i;
+    for (let i = 0; i < seedRanges[4][1]; i++) {
+      let seed = seedRanges[4][0] + i;
       let location = seedToLocation(seed);
       if (!lowerLocation || lowerLocation > location) lowerLocation = location;
     }
   // })
-  console.log("9: ", lowerLocation)
+  console.log("4: ", lowerLocation)
 }
 getRealSeeds(seeds)
 
@@ -134,3 +134,8 @@ getRealSeeds(seeds)
 // seedRanges[7]: 384367354
 // seedRanges[8]: 69841803 // this was the answer for part 2!
 // seedRanges[9]: 1148949110
+
+
+// I've attemped to refactor this whole code by creating less variables in the global scope and so on,
+// but then I noticed that the final calculations took way more time!!
+// So in the end I chose to leave the code like it is.
