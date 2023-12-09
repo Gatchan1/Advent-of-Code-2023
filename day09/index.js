@@ -28,7 +28,7 @@ function isLastSequence(sequence) {
 
 // :::::::::::: PART 1 ::::::::::::
 
-function getForwardsValue(sequences) {
+function getValue(sequences) {
   for (let i = sequences.length - 1; i >= 0; i--) {
     let newValue;
     if (i === sequences.length - 1) {
@@ -41,22 +41,22 @@ function getForwardsValue(sequences) {
   }
 }
 
-function getExtrapolatedValueForwards(history) {
+function getExtrapolatedValue(history) {
   const sequences = [[...history]];
   while (!isLastSequence(sequences[sequences.length - 1])) {
     let nextSequence = getNextSequence(sequences[sequences.length - 1]);
     sequences.push(nextSequence);
   }
-  getForwardsValue(sequences);
+  getValue(sequences);
   // console.log("Here is the original sequence with the extrapolated value at the end: ", sequences[0])
   const lastIndex = sequences[0].length - 1;
   return sequences[0][lastIndex]; // this is the extrapolated value.
 }
 
-function solveForwards(data) {
+function solve(data) {
   const newValues = [];
   data.forEach((history) => {
-    newValues.push(getExtrapolatedValueForwards(history));
+    newValues.push(getExtrapolatedValue(history));
   });
 //   console.log("extrapolated values (part 1): ", newValues);
   const answer = newValues.reduce((acc, curr) => {
@@ -65,43 +65,56 @@ function solveForwards(data) {
   return answer;
 }
 
-console.log("the answer for part 1 is: ", solveForwards(parsed));
+console.log("the answer for part 1 is: ", solve(parsed));
 
 // :::::::::::: PART 2 ::::::::::::
 
-function getBackwardsValue(sequences) {
-    for (let i = sequences.length - 1; i >= 0; i--) {
-      let newValue;
-      if (i === sequences.length - 1) {
-        newValue = 0;
-      } else {
-        newValue = sequences[i][0] - sequences[i + 1][0];
-      }
-      sequences[i].unshift(newValue);
-    }
-  }
-  
-  function getExtrapolatedValueBackwards(history) {
-    const sequences = [[...history]];
-    while (!isLastSequence(sequences[sequences.length - 1])) {
-      let nextSequence = getNextSequence(sequences[sequences.length - 1]);
-      sequences.push(nextSequence);
-    }
-    getBackwardsValue(sequences);
-    // console.log("Here is the original sequence with the extrapolated value at the start: ", sequences[0])
-    return sequences[0][0]; // this is the extrapolated value.
-  }
-  
-  function solveBackwards(data) {
-    const newValues = [];
-    data.forEach((history) => {
-      newValues.push(getExtrapolatedValueBackwards(history));
-    });
-    // console.log("extrapolated values (part 2): ", newValues);
-    const answer = newValues.reduce((acc, curr) => {
-      return acc + curr;
-    });
-    return answer;
-  }
+// Ok, I hadn't noticed that reversing the arrays allows you to reuse every part 1 function...
+ 
+function reverse(data) {
+    const copy = JSON.parse(JSON.stringify(data));
+    return copy.map((sequence) => sequence.reverse())
+}
 
-  console.log("the answer for part 2 is: ", solveBackwards(parsed));
+const reversed = reverse(parsed);
+
+console.log("the answer for part 2 is: ", solve(reversed));
+
+
+
+// function getBackwardsValue(sequences) {
+//     for (let i = sequences.length - 1; i >= 0; i--) {
+//       let newValue;
+//       if (i === sequences.length - 1) {
+//         newValue = 0;
+//       } else {
+//         newValue = sequences[i][0] - sequences[i + 1][0];
+//       }
+//       sequences[i].unshift(newValue);
+//     }
+//   }
+  
+//   function getExtrapolatedValueBackwards(history) {
+//     const sequences = [[...history]];
+//     while (!isLastSequence(sequences[sequences.length - 1])) {
+//       let nextSequence = getNextSequence(sequences[sequences.length - 1]);
+//       sequences.push(nextSequence);
+//     }
+//     getBackwardsValue(sequences);
+//     // console.log("Here is the original sequence with the extrapolated value at the start: ", sequences[0])
+//     return sequences[0][0]; // this is the extrapolated value.
+//   }
+  
+//   function solveBackwards(data) {
+//     const newValues = [];
+//     data.forEach((history) => {
+//       newValues.push(getExtrapolatedValueBackwards(history));
+//     });
+//     // console.log("extrapolated values (part 2): ", newValues);
+//     const answer = newValues.reduce((acc, curr) => {
+//       return acc + curr;
+//     });
+//     return answer;
+//   }
+
+//   console.log("the answer for part 2 is: ", solveBackwards(parsed));
