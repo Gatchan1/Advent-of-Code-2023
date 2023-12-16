@@ -51,8 +51,7 @@ function runThrough() {
     /**
      * We have to keep track of what was our previous position so that we can know
      * where our current symbol has to take us to.
-     */ 
-    
+     */     
     while (!(currentPos[0] === start[0] && currentPos[1] === start[1])) {
         switch(map[currentPos[1]][currentPos[0]]) {
             case "|":
