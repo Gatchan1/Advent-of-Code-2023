@@ -51,6 +51,7 @@ function test(position, moveFunction) {
   return test;
 }
 
+// We'll store the positions that form part of the loop in this array:
 let loopPositions = [[...start]];
 
 function runThrough() {
@@ -210,6 +211,8 @@ function runThrough() {
 
 runThrough(map);
 
+// "parseToStringPosition" exists for making the comparison of positions easier.
+// (it's easier to compare two strings than two arrays...)
 function parseToStringPosition(x, y) {
   let string;
   if (x < 10) string = "00" + x + "x";
@@ -222,16 +225,20 @@ function parseToStringPosition(x, y) {
 }
 
 // console.log("loopPositions!!!", loopPositions);
+
+// "stringPositions" contains the "stringified" positions that conform the loop
+// but without the information of cardinal directions.
 const stringPositions = loopPositions.map((position) => {
   return parseToStringPosition(position[0], position[1]);
 });
+// "stringCardinals" contains the "stringified" positions that conform the loop
+// INCLUDING the information of cardinal directions.
 const stringCardinals = loopPositions.map((position) => {
   let string;
   string = parseToStringPosition(position[0], position[1]);
   string += "_" + position[2];
   return string;
 });
-
 // console.log("stringPositions!!!", stringPositions);
 // console.log("stringCardinals!!!", stringCardinals);
 
@@ -245,13 +252,15 @@ const insidePositions = [];
  */
 function mapPositions() {
   map.forEach((row, indexY) => {
-    let situation = "o";
+    let situation = "o"; // outside
     for (let indexX = 0; indexX < row.length; indexX++) {
       let position = parseToStringPosition(indexX, indexY);
       let index = stringPositions.indexOf(position);
-      if (index >= 0) {
+      if (index >= 0) { // if the position is part of the loop:
         if (stringCardinals[index].includes("E")) situation = "i";
+        // if the inside part of the loop points towards the east, we'll be looking at the inside.
         if (stringCardinals[index].includes("W")) situation = "o";
+        // if the inside part of the loop points towards the west we'll be looking at the outside.
       }
       if (situation === "i" && index < 0) insidePositions.push(position);
     }
