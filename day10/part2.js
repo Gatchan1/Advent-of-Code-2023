@@ -14,7 +14,7 @@ function locateS(data) {
 // and Y, meaning the outer index in a bidimensional array (row number).
 // location[2] indicates which direction points to the inside of the loop shape.
 
-// We'll keep track of where is the inside all along the loop.
+// We'll keep track of where is the inside part all along the loop.
 
 const start = locateS(parsed);
 // console.log("start", start);
@@ -40,6 +40,11 @@ const move = {
   },
 };
 
+/**
+ * "test" serves the purpose of doing a dry run of a movement
+ * without truly applying that movement to our real position
+ * (we simply apply the movement to a copy of the position instead).
+ */
 function test(position, moveFunction) {
   const test = [...position];
   moveFunction(test);
@@ -52,17 +57,17 @@ function runThrough() {
   let previousPos = [...start];
   let currentPos = [...start];
   currentPos[1]++; // begin from the position under the S;
-  currentPos[2] = "SW"
-  // currentPos[2] has to be the same as previousPos[2] for the stringified comparison to work;
+  currentPos[2] = "SW";
+  // currentPos[2] has to be the same as previousPos[2] for the stringified comparison to work.
   let steps = 1;
-  loopPositions = [...loopPositions, [...currentPos]]
+  loopPositions = [...loopPositions, [...currentPos]];
 
-  // console.log("previous position:", map[previousPos[1]][previousPos[0]], previousPos)
-  // console.log("current position", map[currentPos[1]][currentPos[0]], currentPos)
+  //   console.log("previous position:", map[previousPos[1]][previousPos[0]], previousPos)
+  //   console.log("current position", map[currentPos[1]][currentPos[0]], currentPos)
 
   /**
    * We have to keep track of what was our previous position so that we can know
-   * where our current symbol has to take us to.
+   * where our current symbol is leading to.
    */
   while (!(currentPos[0] === start[0] && currentPos[1] === start[1])) {
     switch (map[currentPos[1]][currentPos[0]]) {
@@ -74,10 +79,10 @@ function runThrough() {
           move.up(previousPos);
           move.up(currentPos);
         }
-        if (currentPos[2] === "E" || currentPos[2] === "SE" || currentPos[2] === "NE") {
+        if (["E", "SE", "NE"].includes(currentPos[2])) {
           previousPos[2] = "E";
           currentPos[2] = "E";
-        } else if (currentPos[2] === "W" || currentPos[2] === "NW" || currentPos[2] === "SW") {
+        } else if (["W", "NW", "SW"].includes(currentPos[2])) {
           previousPos[2] = "W";
           currentPos[2] = "W";
         }
@@ -90,10 +95,10 @@ function runThrough() {
           move.left(previousPos);
           move.left(currentPos);
         }
-        if (currentPos[2] === "S" || currentPos[2] === "SE" || currentPos[2] === "SW") {
+        if (["S", "SE", "SW"].includes(currentPos[2])) {
           previousPos[2] = "S";
           currentPos[2] = "S";
-        } else if (currentPos[2] === "N" || currentPos[2] === "NW" || currentPos[2] === "NE") {
+        } else if (["N", "NW", "NE"].includes(currentPos[2])) {
           previousPos[2] = "N";
           currentPos[2] = "N";
         }
@@ -102,20 +107,20 @@ function runThrough() {
         if (JSON.stringify(test(previousPos, move.down)) === JSON.stringify(currentPos)) {
           move.down(previousPos);
           move.right(currentPos);
-          if (currentPos[2] === "E" || currentPos[2] === "SE" || currentPos[2] === "NE") {
+          if (["E", "SE", "NE"].includes(currentPos[2])) {
             previousPos[2] = "NE";
             currentPos[2] = "NE";
-          } else if (currentPos[2] === "W" || currentPos[2] === "NW" || currentPos[2] === "SW") {
+          } else if (["W", "NW", "SW"].includes(currentPos[2])) {
             previousPos[2] = "SW";
             currentPos[2] = "SW";
           }
         } else {
           move.left(previousPos);
           move.up(currentPos);
-          if (currentPos[2] === "N" || currentPos[2] === "NE" || currentPos[2] === "NW") {
+          if (["N", "NE", "NW"].includes(currentPos[2])) {
             previousPos[2] = "NE";
             currentPos[2] = "NE";
-          } else if (currentPos[2] === "S" || currentPos[2] === "SW" || currentPos[2] === "SE") {
+          } else if (["S", "SW", "SE"].includes(currentPos[2])) {
             previousPos[2] = "SW";
             currentPos[2] = "SW";
           }
@@ -125,20 +130,20 @@ function runThrough() {
         if (JSON.stringify(test(previousPos, move.down)) === JSON.stringify(currentPos)) {
           move.down(previousPos);
           move.left(currentPos);
-          if (currentPos[2] === "E" || currentPos[2] === "SE" || currentPos[2] === "NE") {
+          if (["E", "SE", "NE"].includes(currentPos[2])) {
             previousPos[2] = "SE";
             currentPos[2] = "SE";
-          } else if (currentPos[2] === "W" || currentPos[2] === "NW" || currentPos[2] === "SW") {
+          } else if (["W", "NW", "SW"].includes(currentPos[2])) {
             previousPos[2] = "NW";
             currentPos[2] = "NW";
           }
         } else {
           move.right(previousPos);
           move.up(currentPos);
-          if (currentPos[2] === "S" || currentPos[2] === "SE" || currentPos[2] === "SW") {
+          if (["S", "SE", "SW"].includes(currentPos[2])) {
             previousPos[2] = "SE";
             currentPos[2] = "SE";
-          } else if (currentPos[2] === "N" || currentPos[2] === "NW" || currentPos[2] === "NE") {
+          } else if (["N", "NW", "NE"].includes(currentPos[2])) {
             previousPos[2] = "NW";
             currentPos[2] = "NW";
           }
@@ -148,20 +153,20 @@ function runThrough() {
         if (JSON.stringify(test(previousPos, move.right)) === JSON.stringify(currentPos)) {
           move.right(previousPos);
           move.down(currentPos);
-          if (currentPos[2] === "S" || currentPos[2] === "SE" || currentPos[2] === "SW") {
+          if (["S", "SE", "SW"].includes(currentPos[2])) {
             previousPos[2] = "SW";
             currentPos[2] = "SW";
-          } else if (currentPos[2] === "N" || currentPos[2] === "NW" || currentPos[2] === "NE") {
+          } else if (["N", "NW", "NE"].includes(currentPos[2])) {
             previousPos[2] = "NE";
             currentPos[2] = "NE";
           }
         } else {
           move.up(previousPos);
           move.left(currentPos);
-          if (currentPos[2] === "E" || currentPos[2] === "NE" || currentPos[2] === "SE") {
+          if (["E", "NE", "SE"].includes(currentPos[2])) {
             previousPos[2] = "NE";
             currentPos[2] = "NE";
-          } else if (currentPos[2] === "W" || currentPos[2] === "NW" || currentPos[2] === "SW") {
+          } else if (["W", "NW", "SW"].includes(currentPos[2])) {
             previousPos[2] = "SW";
             currentPos[2] = "SW";
           }
@@ -171,20 +176,20 @@ function runThrough() {
         if (JSON.stringify(test(previousPos, move.left)) === JSON.stringify(currentPos)) {
           move.left(previousPos);
           move.down(currentPos);
-          if (currentPos[2] === "S" || currentPos[2] === "SE" || currentPos[2] === "SW") {
+          if (["S", "SE", "SW"].includes(currentPos[2])) {
             previousPos[2] = "SE";
             currentPos[2] = "SE";
-          } else if (currentPos[2] === "N" || currentPos[2] === "NW" || currentPos[2] === "NE") {
+          } else if (["N", "NW", "NE"].includes(currentPos[2])) {
             previousPos[2] = "NW";
             currentPos[2] = "NW";
           }
         } else {
           move.up(previousPos);
           move.right(currentPos);
-          if (currentPos[2] === "E" || currentPos[2] === "SE" || currentPos[2] === "NE") {
+          if (["E", "SE", "NE"].includes(currentPos[2])) {
             previousPos[2] = "SE";
             currentPos[2] = "SE";
-          } else if (currentPos[2] === "W" || currentPos[2] === "NW" || currentPos[2] === "SW") {
+          } else if (["W", "NW", "SW"].includes(currentPos[2])) {
             previousPos[2] = "NW";
             currentPos[2] = "NW";
           }
@@ -192,60 +197,66 @@ function runThrough() {
         break;
     }
     steps++;
-    loopPositions = [...loopPositions, [...previousPos]]
+    loopPositions = [...loopPositions, [...previousPos]];
     // It's important that we add to this array "previousPos" instead of "currentPos"!!
     // Because we've already modified currentPos to the next position, but it's direction
     // (currentPos[2]) hasn't been updated yet, whereas preciousPos is completely processed.
-
   }
-  if (currentPos[0] === start[0] && currentPos[1] === start[1]) {
-    // console.log("the total length of the loop is: ", steps);
-    // console.log("the farthest point of the loop is: ", steps / 2);
-  }
+  //   if (currentPos[0] === start[0] && currentPos[1] === start[1]) {
+  //     console.log("the total length of the loop is: ", steps);
+  //     console.log("the farthest point of the loop is: ", steps / 2);
+  //   }
 }
 
 runThrough(map);
 
 function parseToStringPosition(x, y) {
-    let string;
-    if (x < 10) string = '00' + x + 'x';
-    else if (x < 100) string = '0' + x + 'x';
-    else string = x + 'x';
-    if (y < 10) string += '_00' + y + 'y';
-    else if (y < 100) string += '_0' + y + 'y';
-    else string += '_' + y + 'y';
-    return string;
+  let string;
+  if (x < 10) string = "00" + x + "x";
+  else if (x < 100) string = "0" + x + "x";
+  else string = x + "x";
+  if (y < 10) string += "_00" + y + "y";
+  else if (y < 100) string += "_0" + y + "y";
+  else string += "_" + y + "y";
+  return string;
 }
 
 // console.log("loopPositions!!!", loopPositions);
-const stringPositions = loopPositions.map(position => {
-    return parseToStringPosition(position[0], position[1])
-})
-const stringCardinals = loopPositions.map(position => {
-    let string;
-    string = parseToStringPosition(position[0], position[1]);
-    string += '_' + position[2];
-    return string;
-})
+const stringPositions = loopPositions.map((position) => {
+  return parseToStringPosition(position[0], position[1]);
+});
+const stringCardinals = loopPositions.map((position) => {
+  let string;
+  string = parseToStringPosition(position[0], position[1]);
+  string += "_" + position[2];
+  return string;
+});
 
 // console.log("stringPositions!!!", stringPositions);
 // console.log("stringCardinals!!!", stringCardinals);
 
 const insidePositions = [];
+
+/**
+ * "mapPositions" reads the map from left to right and counts how many
+ * inside positions are collected inside the loop.
+ * We know a position is an inside position if it follows a loop wall that
+ * has it's interior pointing towards the east.
+ */
 function mapPositions() {
-    map.forEach((row, indexY)=>{
-        let situation = 'o';
-        for (let indexX = 0; indexX < row.length; indexX++) {
-            let position = parseToStringPosition(indexX, indexY);
-            let index = stringPositions.indexOf(position);
-            if (index >= 0) {
-             if (stringCardinals[index].includes("E")) situation = 'i';
-             if (stringCardinals[index].includes("W")) situation = 'o';
-            }
-            if (situation === 'i' && index < 0) insidePositions.push(position)
-        }
-    })
+  map.forEach((row, indexY) => {
+    let situation = "o";
+    for (let indexX = 0; indexX < row.length; indexX++) {
+      let position = parseToStringPosition(indexX, indexY);
+      let index = stringPositions.indexOf(position);
+      if (index >= 0) {
+        if (stringCardinals[index].includes("E")) situation = "i";
+        if (stringCardinals[index].includes("W")) situation = "o";
+      }
+      if (situation === "i" && index < 0) insidePositions.push(position);
+    }
+  });
 }
 
 mapPositions();
-console.log("insidePositions!!!", insidePositions.length);
+console.log("The number of inside positions is:", insidePositions.length);
